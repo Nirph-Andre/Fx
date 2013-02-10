@@ -5,12 +5,14 @@ var Fx = (function(){
 	var win = window;
 	var appVersion = navigator.appVersion;
 	var isIE = appVersion.search('MSIE') > -1;
-	var is_IE9_and_below = isIE && parseInt(appVersion.slice(22,26),10) < 10;
+	var is_IE9_and_below = isIE && parse(appVersion.slice(22,26)) < 10;
 	var vendors = 'Ms Moz Webkit O'.split(' ');
 	var vendor_count = vendors.length;
 	var win_perf = win.performance;
 	var hasPerformance = !!(win_perf && win_perf.now);
 	var AF = 'AnimationFrame', cAF = 'cancel'+AF, CAF = 'Cancel'+AF, rAF = 'request'+AF, RAF = 'Request'+AF;
+	var translate = 'translate';
+	var scale = 'scale';
 
 
 	//
@@ -87,9 +89,9 @@ var Fx = (function(){
 		// fix for IE
 
 
-		if (is_IE9_and_below && property === 'translate3d') {
+		if (is_IE9_and_below && property === translate + '3d') {
 
-			property = 'translate';
+			property = translate;
 
 		}
 
@@ -183,23 +185,23 @@ var Fx = (function(){
 
 			switch (property) {
 
-				case 'scale':
+				case scale:
 
 					sliceStart = 6;
 
-				case 'scale3d':
+				case scale+'3d':
 
 					if (!sliceStart) {
 						sliceStart = 8;
 					}
 
-				case 'translate':
+				case translate:
 
 					if (!sliceStart) {
 						sliceStart = 10;
 					}
 
-				case 'translate3d':
+				case translate+'3d':
 
 					if (vendorTransform) {
 
@@ -234,7 +236,7 @@ var Fx = (function(){
 
 
 
-					} else if (property === 'translate' || property === 'translate3d') {
+					} else if (property === translate || property === translate+'3d') {
 
 						result = [
 							parse(style.left) || 0,
