@@ -4,15 +4,15 @@ A super lightweight, high performance, cross-browser, dependency-free animation 
 
 ##Features:
 
-- *Super lightweight*: Just 3kb minified
-- *High performance*: Uses requestAnimationFrame and hardware-accelerated CSS transforms, degrades gracefully in older browsers
-- *Cross browser*: Tested in Chrome, Safari, Firefox, Opera, iOS, Android, and IE6+
-- *Dependency-free*: No jQuery, no MooTools, no YUI, no Closure
-- *Supports module loaders*: CommonJS and AMD
+- **Super lightweight**: Just 3kb minified
+- **High performance**: Uses requestAnimationFrame and hardware-accelerated CSS transforms, degrades gracefully in older browsers
+- **Cross browser**: Tested in Chrome, Safari, Firefox, Opera, iOS, Android, and IE6+
+- **Dependency-free**: No jQuery, no MooTools, no YUI, no Closure
+- **Supports module loaders**: CommonJS and AMD
 
 ##Usage
 
-`javascript
+```javascript
 
 var fx = new Fx(DOMElement, property, options);
 
@@ -21,17 +21,17 @@ fx.get();		// get current value of the property
 fx.set(value);	// immediately set value
 
 fx.to(value);	// animate to value
-`
+```
 
 ##Example
 
-`javascript
+```javascript
 
 var element = document.getElementById('myElement');
 var fx = new Fx(element, 'top', {
 	duration: 1000
 }).to(100);
-`
+```
 
 ##Options
 
