@@ -1,0 +1,6 @@
+{
+	"name": "Fx.js",
+	"version": "0.1.0",
+	"author": "Boris Cherny <boris@agilediagnosis.com>",
+	"description": "A super lightweight, high performance, cross-browser, dependency-free animation library for the modern web."
+}
