@@ -127,3 +127,28 @@ addEvent(toggler_font_size, 'click', function (e) {
 	fx_font_size.to(to);
 
 });
+
+// fx: scrollTop
+
+var element_scrollTop = $('#element-scrollTop');
+var toggler_scrollTop = $('#toggler-scrollTop');
+var fx_scrollTop = new Fx.Scroll(element_scrollTop);
+var scrollTop_call_count = 0;
+
+addEvent(toggler_scrollTop, 'click', function (e) {
+
+	var to;
+	
+	if (++scrollTop_call_count % 2) {
+
+		to = 220;
+
+	} else {
+
+		to = 0;
+
+	}
+	
+	fx_scrollTop.to(to);
+
+});

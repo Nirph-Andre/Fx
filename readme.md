@@ -48,7 +48,7 @@ var fx = new Fx(element, 'top', {
 ##To do:
 
 - Unit tests
-- Support for more units
+- Support for more units (%, em, deg)
 - Support for more transitions
 - Support for transitioning multiple properties
 - Support for CSS class transitions
