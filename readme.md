@@ -31,6 +31,14 @@ var fx = new Fx(element, 'top', {
 }).to(100);
 ```
 
+##API
+
+- `Fx.element` {DOMElement} Returns the element attached to the Fx instance
+- `Fx.property` {String} Returns the property attached to the Fx instance
+- `Fx.get()` {Function} Returns the current value of the property attached to the Fx instance
+- `Fx.set(value)` {Function} Set the Fx instance's value immediately (without animating it)
+- `Fx.to(value)` {Function} Animate the Fx instance to the given value
+
 ##Options
 
 - `duration` {Number} The animation duration (in milliseconds)
@@ -43,4 +51,5 @@ var fx = new Fx(element, 'top', {
 - Support for more units
 - Support for more transitions
 - Support for transitioning multiple properties
-- Support for class transitions
+- Support for CSS class transitions
+- Support for colors
