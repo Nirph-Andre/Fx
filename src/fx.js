@@ -11,8 +11,6 @@ var Fx = (function(){
 	var win_perf = win.performance;
 	var hasPerformance = !!(win_perf && win_perf.now);
 	var AF = 'AnimationFrame', cAF = 'cancel'+AF, CAF = 'Cancel'+AF, rAF = 'request'+AF, RAF = 'Request'+AF;
-	var translate = 'translate';
-	var scale = 'scale';
 
 
 	//
@@ -86,22 +84,15 @@ var Fx = (function(){
 	var Fx = function (element, property, options) {
 
 
-		// fix for IE
-
-
-		if (is_IE9_and_below && property === translate + '3d') {
-
-			property = translate;
-
-		}
-
-
 		// vars
 
 
 		var self = this;
 		var style = element.style;
 		var px = 'px';
+		var translate = 'translate';
+		var scale = 'scale';
+		var threeD = '3d';
 
 		var x, y, z;
 		var animationFrame;
@@ -109,8 +100,25 @@ var Fx = (function(){
 		var x_exists, y_exists, z_exists,
 			x_from,   y_from,	z_from,
 			x_to,	  y_to,		z_to,
-			x_dir,
 			mx,		  my,		mz;
+
+
+		// fixes for IE9, which doesn't support 3D animations
+
+
+		if (is_IE9_and_below) {
+
+			if (property === translate + threeD) {
+
+				property = translate;
+
+			} else if (property === scale + threeD) {
+
+				property = scale;
+
+			}
+
+		}
 
 
 		// set user options
@@ -189,7 +197,7 @@ var Fx = (function(){
 
 					sliceStart = 6;
 
-				case scale+'3d':
+				case scale+threeD:
 
 					if (!sliceStart) {
 						sliceStart = 8;
@@ -201,7 +209,7 @@ var Fx = (function(){
 						sliceStart = 10;
 					}
 
-				case translate+'3d':
+				case translate+threeD:
 
 					if (vendorTransform) {
 
@@ -236,7 +244,7 @@ var Fx = (function(){
 
 
 
-					} else if (property === translate || property === translate+'3d') {
+					} else if (property === translate || property === translate+threeD) {
 
 						result = [
 							parse(style.left) || 0,
@@ -336,7 +344,6 @@ var Fx = (function(){
 
 				x_from = x;
 				x_to = new_x;
-				x_dir = x_from > x_to ? -1 : 1;
 				mx = (x_to - x_from)/duration;
 
 			} if (y_exists) {
