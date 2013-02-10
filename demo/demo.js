@@ -102,3 +102,28 @@ addEvent(toggler_opacity, 'click', function (e) {
 	fx_opacity.to(to);
 
 });
+
+// fx: font-size
+
+var element_font_size = $('#element-font-size');
+var toggler_font_size = $('#toggler-font-size');
+var fx_font_size = new Fx(element_font_size, 'font-size');
+var font_size_call_count = 0;
+
+addEvent(toggler_font_size, 'click', function (e) {
+
+	var to;
+	
+	if (++font_size_call_count % 2) {
+
+		to = 72;
+
+	} else {
+
+		to = 10;
+
+	}
+	
+	fx_font_size.to(to);
+
+});
