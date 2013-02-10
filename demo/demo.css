@@ -10,6 +10,7 @@ input {
 .container {
 	background: #eee;
 	height: 100px;
+	overflow: hidden;
 	position: relative;
 	width: 100%;
 }
@@ -25,4 +26,9 @@ input {
 
 #element-opacity {
 	position: relative;
+}
+
+#element-scale {
+	left: 50%;
+	margin-left: -50px;
 }

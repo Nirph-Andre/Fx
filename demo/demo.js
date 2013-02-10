@@ -53,6 +53,31 @@ addEvent(toggler_left, 'click', function (e) {
 
 });
 
+// fx: scale
+
+var element_scale = $('#element-scale');
+var toggler_scale = $('#toggler-scale');
+var fx_scale = new Fx(element_scale, 'scale3d');
+var scale_call_count = 0;
+
+addEvent(toggler_scale, 'click', function (e) {
+
+	var to;
+	
+	if (++scale_call_count % 2) {
+
+		to = 10;
+
+	} else {
+
+		to = 1;
+
+	}
+	
+	fx_scale.to(to, to, to);
+
+});
+
 // fx: opacity
 
 var element_opacity = $('#element-opacity');
@@ -75,30 +100,5 @@ addEvent(toggler_opacity, 'click', function (e) {
 	}
 	
 	fx_opacity.to(to);
-
-});
-
-// fx: scale
-
-var element_scale = $('#element-scale');
-var toggler_scale = $('#toggler-scale');
-var fx_scale = new Fx(element_scale, 'scale');
-var scale_call_count = 0;
-
-addEvent(toggler_scale, 'click', function (e) {
-
-	var to;
-	
-	if (++scale_call_count % 2) {
-
-		to = 2;
-
-	} else {
-
-		to = 1;
-
-	}
-	
-	fx_scale.to(to, to, to);
 
 });

@@ -145,7 +145,7 @@ var Fx = (function(){
 				style[vendorTransform] = property + '(' + [_x, _y].join(',') + ')';
 			} : tweenNoCSS3,
 			scale3d: vendorTransform ? function () {
-				style[vendorTransform] = property + '(' + arguments.join(',') + ')';
+				style[vendorTransform] = property + '(' + toArray(arguments).join(',') + ')';
 			} : function(){},
 			bottom: function(x) {
 				style[property] = x + px;
@@ -165,6 +165,15 @@ var Fx = (function(){
 
 		var set = setters[property];
 
+		var defaults = {
+			opacity: [1],
+			zoom: [1],
+			scale: [1,1],
+			scale3d: [1,1,1],
+			translate: [0,0],
+			translate3d: [0,0,0]
+		};
+
 		// get initial property values
 
 		var get = function() {
@@ -173,9 +182,22 @@ var Fx = (function(){
 			var sliceStart;
 
 			switch (property) {
+
+				case 'scale':
+
+					sliceStart = 6;
+
+				case 'scale3d':
+
+					if (!sliceStart) {
+						sliceStart = 8;
+					}
+
 				case 'translate':
 
-					sliceStart = 10;
+					if (!sliceStart) {
+						sliceStart = 10;
+					}
 
 				case 'translate3d':
 
@@ -204,12 +226,20 @@ var Fx = (function(){
 
 							}
 
+						} else {
+
+							result = defaults[property];
+
 						}
 
-					} else {
 
-						result[0] = parse(style.left) || 0;
-						result[1] = parse(style.top) || 0;
+
+					} else if (property === 'translate' || property === 'translate3d') {
+
+						result = [
+							parse(style.left) || 0,
+							parse(style.top) || 0
+						];
 
 					}
 
@@ -231,7 +261,7 @@ var Fx = (function(){
 				case 'zoom':
 
 					var value = parse(style[property]);
-					result[0] = isNaN(value) ? 1 : value; // because 0 is falsey
+					result = isNaN(value) ? defaults[property] : [value]; // because 0 is falsey
 
 					break;
 
@@ -346,66 +376,6 @@ var Fx = (function(){
 
 	};
 
-	Fx.Scroll = function(element, options) {
-
-		var self = this;
-
-		self.options = {
-			direction: 'vertical'
-		};
-
-		if (options) {
-			setOptions(self.options, options);
-		}
-
-		var dir = self.options.direction;
-		var property = 'scroll' + (dir === 'vertical' ? 'Top' : 'Left');
-		var oldScroll = 0;
-
-		var fxScroll = new Fx(element.parentNode, property);
-		var fxTranslate = new Fx(element, 'translate3d', {
-			animationStart: function() {
-
-				oldScroll = fxScroll.get()[0];
-				fxTranslate.set.apply(fxTranslate, getMatrix(oldScroll));
-				fxScroll.set(0);
-
-				//console.log('start: old=', oldScroll, ', matrix=', getMatrix(oldScroll));
-
-			},
-			animationEnd: function() {
-
-				var newScroll = fxTranslate.get()[dir === 'vertical' ? 1 : 0];
-				fxTranslate.set(0,0,0);
-				fxScroll.set(-newScroll);
-
-				//console.log('end: new=', newScroll);
-
-			},
-			duration: options ? options.duration : null
-		});
-
-		var set = function(x) {
-			fxTranslate.set.apply(this, getMatrix(x));
-		};
-
-		var to = function(x) {
-			fxTranslate.to.apply(this, getMatrix(x));
-		};
-
-		var getMatrix = function(x) {
-			return dir === 'vertical' ? [0, -x, 0] : [-x, 0, 0];
-		};
-
-
-		// public API
-
-
-		self.set = set;
-		self.to = to;
-
-	};
-
 
 	//
 	// helpers
@@ -433,6 +403,10 @@ var Fx = (function(){
 			}
 		}
 
+	}
+
+	function toArray (collection) {
+		return [].slice.call(collection);
 	}
 
 
