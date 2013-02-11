@@ -89,10 +89,10 @@ var Fx = (function(){
 
 		var self = this;
 		var style = element.style;
-		var px = 'px';
-		var translate = 'translate';
-		var scale = 'scale';
-		var threeD = '3d';
+		var px = 'px',
+			translate = 'translate',
+			scale = 'scale',
+			threeD = '3d';
 
 		var x, y, z;
 		var animationFrame;
@@ -165,17 +165,22 @@ var Fx = (function(){
 			},
 			scrollLeft: function(x) {
 				element[property] = x;
+			},
+			color: function (r, g, b) {
+				style[property] = 'rgb(' + r + ',' + g + ',' + b + ')';
 			}
 		};
 
 		setters.scale = setters.scale3d;
-		setters['font-size'] = setters.height = setters.width = setters.left = setters.right = setters.top = setters.bottom;
+		setters['font-size'] = setters.height = setters.width = setters.left = setters.right = setters.top = setters.margin = setters['margin-bottom'] = setters['margin-left'] = setters['margin-right'] = setters['margin-top'] = setters.padding = setters['padding-bottom'] = setters['padding-left'] = setters['padding-right'] = setters['padding-top'] = setters.bottom;
 		setters.zoom = setters.opacity;
 		setters.scrollTop = setters.scrollLeft;
+		setters['background-color'] = setters['border-color'] = setters['border-bottom-color'] = setters['border-left-color'] = setters['border-right-color'] = setters['border-top-color'] = setters.color;
 
 		var set = setters[property];
 
 		var defaults = {
+			color: [0,0,0],
 			opacity: [1],
 			zoom: [1],
 			scale: [1,1],
@@ -259,6 +264,16 @@ var Fx = (function(){
 				case 'font-size':
 				case 'height':
 				case 'left':
+				case 'margin':
+				case 'margin-bottom':
+				case 'margin-left':
+				case 'margin-right':
+				case 'margin-top':
+				case 'padding':
+				case 'padding-bottom':
+				case 'padding-left':
+				case 'padding-right':
+				case 'padding-top':
 				case 'right':
 				case 'top':
 				case 'width':
@@ -279,6 +294,18 @@ var Fx = (function(){
 				case 'scrollTop':
 
 					result[0] = element[property] || 0;
+
+					break;
+
+				case 'background-color':
+				case 'border-bottom-color':
+				case 'border-color':
+				case 'border-left-color':
+				case 'border-top-color':
+				case 'border-right-color':
+				case 'color':
+
+					result = parseColor(style[property]);
 			}
 
 			return result;
@@ -401,6 +428,61 @@ var Fx = (function(){
 
 	function parse (string) {
 		return parseInt(string, 10);
+	}
+
+	/**
+	 * Parse a color into its component RGB values; accepts 'abc', '#abc', 'abcdef', '#abcdef', 'rgb(12,34,56)', '12,34,56'
+	 * @param  {[type]} color [description]
+	 * @return {[type]}       [description]
+	 */
+	function parseColor (color) {
+
+		var original = color.slice(0);
+
+		if (color.charAt(0) === '#') {
+			color = color.slice(1);
+		}
+
+		var length = color.length;
+
+		if (length === 3) {
+
+			// eg. abc
+			
+			var char1 = color.charAt(0);
+			var char2 = color.charAt(1);
+			var char3 = color.charAt(2);
+
+			return [parseHex(char1+char1), parseHex(char2+char2), parseHex(char3+char3)];
+
+		} else if (length === 6) {
+
+			// eg. abcdef
+
+			return [parseHex(color.slice(0,2)), parseHex(color.slice(2,4)), parseHex(color.slice(4,6))];
+
+		} else if (color.search(',') > -1) {
+
+			// eg. rgb(12,34,56) or 12,34,56
+			
+			// remove rgb() wrapper if it exists
+			var parts = color.split('(');
+			if (parts.length === 2) {
+				color = parts[1].slice(0,-1);
+			}
+
+			return color.split(',');
+
+		} else {
+
+			throw new Error('Error parsing color ' + original);
+
+		}
+
+	}
+
+	function parseHex (hexstring) {
+		return parseInt(hexstring, 16);
 	}
 
 	function setOptions (options, userOptions) {

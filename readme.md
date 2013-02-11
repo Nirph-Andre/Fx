@@ -45,6 +45,12 @@ var fx = new Fx(element, 'top', {
 - `animationStart` {Function} Animation start hook
 - `animationEnd` {Function} Animation end hook
 
+##Supported properties
+
+`background-color` `border-bottom-color` `border-color` `border-left-color` `border-right-color` `border-top-color` `bottom` `color` `height` `left` `margin` `margin-bottom` `margin-left` `margin-right` `margin-top` `opacity` `padding` `padding-bottom` `padding-left` `padding-right` `padding-top` `right` `scale` `scale3d` `top` `translate` `translate3d` `width` `zoom`
+
+`scrollLeft` `scrollTop`
+
 ##To do:
 
 - Unit tests
