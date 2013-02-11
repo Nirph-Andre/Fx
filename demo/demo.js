@@ -152,3 +152,28 @@ addEvent(toggler_scrollTop, 'click', function (e) {
 	fx_scrollTop.to(to);
 
 });
+
+// fx: color
+
+var element_color = $('#element-color');
+var toggler_color = $('#toggler-color');
+var fx_color = new Fx(element_color);
+var color_call_count = 0;
+
+addEvent(toggler_color, 'click', function (e) {
+
+	var to;
+	
+	if (++color_call_count % 2) {
+
+		to = '#E71';
+
+	} else {
+
+		to = 'rgb(0,0,255)';
+
+	}
+	
+	fx_color.to(to);
+
+});
