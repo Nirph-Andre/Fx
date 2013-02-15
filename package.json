@@ -1,6 +1,19 @@
 {
-	"name": "Fx.js",
-	"version": "0.1.0",
-	"author": "Boris Cherny <boris@agilediagnosis.com>",
-	"description": "A super lightweight, high performance, cross-browser, dependency-free animation library for the modern web."
+	"name": "fxjs",
+	"version": "0.1.2",
+	"author": "Agile Diagnosis <hello@agilediagnosis.com>",
+	"contributors": [
+		"Boris Cherny <boris@agilediagnosis.com>"
+	],
+	"description": "A super lightweight, high performance, cross-browser, dependency-free animation library for the modern web.",
+	"bugs": {
+		"email": "boris@agilediagnosis.com",
+		"url": "https://github.com/AgileDiagnosis/Fx/issues"
+	},
+	"license": "MIT",
+	"readmeFilename": "README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/AgileDiagnosis/Fx.git"
+	}
 }
