@@ -98,6 +98,7 @@ var Fx = (function(){
 			duration: 300,
 			animationStart: function(){},
 			animationEnd: function(){},
+			transition: 'linear',
 			unit: 'px'
 		};
 
@@ -119,10 +120,11 @@ var Fx = (function(){
 		
 		property = toCamelCase(property);
 
+		var opts = self.options;
 		var style = element.style;
 		var is3d = property.search('3d') > -1;
 		var hasUnit = no_unit.indexOf(property) < 0;
-		var unit = hasUnit ? self.options.unit : '';
+		var unit = hasUnit ? opts.unit : '';
 
 		var x, y, z;
 		var animationFrame;
@@ -131,6 +133,37 @@ var Fx = (function(){
 			x_from,   y_from,	z_from,
 			x_to,	  y_to,		z_to,
 			mx,		  my,		mz;
+
+
+		// set transition
+		
+
+		var transitions = {
+			linear: function (time) {
+
+				var result = [];
+
+				if (x_exists) {
+
+					result.push(mx*time);
+
+				} if (y_exists) {
+
+					result.push(my*time);
+
+				} if (z_exists) {
+
+					result.push(mz*time);
+
+				}
+
+				return result;
+
+			}
+		};
+
+		var trans = opts.transition;
+		var transition = typeof trans === 'function' ? trans : transitions.linear;
 
 
 		// fixes for IE9, which doesn't support 3D animations
@@ -147,7 +180,7 @@ var Fx = (function(){
 
 
 		if (options) {
-			setOptions(self.options, options);
+			setOptions(opts, options);
 		}
 
 
@@ -289,23 +322,23 @@ var Fx = (function(){
 
 
 		// animate!
+		
 
+		var compute = function (time) {
 
-		var compute = function (time){
-
-			var t = time - time_start;
+			var coords = transition(time);
 
 			if (x_exists) {
 
-				x = mx*t + x_from;
+				x = x_from + coords[0];
 
 			} if (y_exists) {
 
-				y = my*t + y_from;
+				y = y_from + coords[1];
 
 			} if (z_exists) {
 
-				z = mz*t + z_from;
+				z = z_from + coords[2];
 
 			}
 
@@ -314,7 +347,7 @@ var Fx = (function(){
 
 		var tick = function (time) {
 
-			compute(time);
+			compute(time - time_start);
 
 			if (time < time_end) {
 				win[rAF](tick);

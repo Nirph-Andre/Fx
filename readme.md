@@ -44,6 +44,7 @@ var fx = new Fx(element, 'top', {
 - `duration` {Number} The animation duration (in milliseconds)
 - `animationStart` {Function} Animation start hook
 - `animationEnd` {Function} Animation end hook
+- `transition` {Function} Custom relative transition function
 - `unit` {String} Units (`px`, `%`, `em`, `deg`, etc...)
 
 ##Supported properties
@@ -61,7 +62,6 @@ var fx = new Fx(element, 'top', {
 ##To do:
 
 - Unit tests
-- Support for more transitions
 - Support for transitioning multiple properties
 - Support for CSS class transitions
 - Support for colors
