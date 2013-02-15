@@ -1,3 +1,12 @@
+/**
+ * Fx.js
+ * @author : Agile Diagnosis
+ * @contributors : Boris Cherny <boris@agilediagnosis.com>
+ * @created : 2012-02-14
+ * @description : The tiny animation library - high performance, works with everthing from iOS to IE6, and dependency free.
+ * @version : 0.1.5
+ */
+
 var Fx = (function(){
 
 	'use strict';

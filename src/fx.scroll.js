@@ -1,3 +1,14 @@
+/**
+ * Fx.Scroll.js
+ * @author : Agile Diagnosis
+ * @contributors : Boris Cherny <boris@agilediagnosis.com>
+ * @created : 2012-02-14
+ * @description : Scrolling functionality for Fx.js. Uses GPU-accelerated
+ *                3D transforms while properly updating scrollLeft and scrollTop.
+ * @requires : Fx.js
+ * @version : 0.1.0
+ */
+
 Fx.Scroll = (function(){
 
 	'use strict';

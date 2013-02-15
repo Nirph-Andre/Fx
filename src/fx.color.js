@@ -1,3 +1,14 @@
+/**
+ * Fx.Color.js
+ * -----BROKEN CODE-----
+ * @author : Agile Diagnosis
+ * @contributors : Boris Cherny <boris@agilediagnosis.com>
+ * @created : 2012-02-14
+ * @description : Color animation plugin for Fx.js
+ * @requires : Fx.js
+ * @version : 0.1.0
+ */
+
 Fx.Color = (function(){
 
 	'use strict';

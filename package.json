@@ -5,7 +5,7 @@
 	"contributors": [
 		"Boris Cherny <boris@agilediagnosis.com>"
 	],
-	"description": "The tiniest high performance, fully cross browser, dependency free animation library for the modern web.",
+	"description": "The tiny animation library - high performance, works with everthing from iOS to IE6, and dependency free. Perfect for applications where you need a lot of animation functionality without a lot of footprint.",
 	"bugs": {
 		"email": "boris@agilediagnosis.com",
 		"url": "https://github.com/AgileDiagnosis/Fx/issues"

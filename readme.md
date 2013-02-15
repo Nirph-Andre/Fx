@@ -1,11 +1,11 @@
 #Fx.js
 
-The tiniest high performance, fully cross browser, dependency free animation library for the modern web. Ideal for mobile applications where you need a lot of animation functionality without a lot of footprint.
+The tiny animation library - high performance, works with everthing from iOS to IE6, and dependency free. Perfect for applications where you need a lot of animation functionality without a lot of footprint.
 
 ##Features:
 
 - **Super lightweight**: Just 1.9k minified + gzipped, or 3.6k minified
-- **High performance**: Uses requestAnimationFrame and hardware-accelerated CSS transforms, degrades gracefully in older browsers (3D degrades to 2D, X/Y transforms degrade to left/top)
+- **High performance**: Uses requestAnimationFrame and hardware-accelerated CSS transforms, degrades gracefully in older browsers (requestAnimationFrame degrades to timeouts, 3D degrades to 2D, X/Y transforms degrade to left/top)
 - **Cross browser**: Tested in Chrome, Safari, Firefox, Opera, iOS, Android, and IE6+
 - **Dependency-free**: No jQuery! No MooTools! No YUI! No Closure!
 
