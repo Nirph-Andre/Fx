@@ -60,4 +60,3 @@ var fx = new Fx(element, 'top', {
 - Unit tests
 - Support for transitioning multiple properties
 - Support for CSS class transitions
-- Support for colors

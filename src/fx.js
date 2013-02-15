@@ -2,10 +2,12 @@ var Fx = (function(){
 
 	'use strict';
 
+	var doc = document;
 	var win = window;
 	var appVersion = navigator.appVersion;
 	var isIE = appVersion.search('MSIE') > -1;
-	var is_IE9_and_below = isIE && parse(appVersion.slice(22,26)) < 10;
+	var IE_version = parse(appVersion.slice(22,26));
+	var is_IE9_and_below = isIE && IE_version < 10;
 	var vendors = 'Ms Moz Webkit O'.split(' ');
 	var vendor_count = vendors.length;
 	var win_perf = win.performance;
@@ -53,7 +55,7 @@ var Fx = (function(){
 
 	// CSS3 transform polyfill
 	var vendorTransform = (function() {
-		var style = document.createElement('span').style;
+		var style = doc.createElement('p').style;
 		var Transform = 'Transform';
 		if (style.transform) return 'transform';
 		for (var v = vendor_count; v--;) {
@@ -73,6 +75,21 @@ var Fx = (function(){
 			}
 
 		}
+	})();
+
+	// check for 3d animation support
+	// based on stackoverflow.com/questions/5661671/detecting-transform-translate3d-support/12621264#12621264
+	var supports3d = (function(){
+
+		var body = doc.body;
+		var el = doc.createElement('p');
+
+		el.style[vendorTransform] = 'translate3d(1px,1px,1px)';
+		body.appendChild(el);
+		var has3d = getCompStyle(el, vendorTransform);
+		body.removeChild(el);
+
+		return typeof has3d !== 'undefined' && has3d.length > 0 && has3d !== 'none' && !(isIE && IE_version < 9);
 	})();
 	
 	var property_map = {
@@ -131,6 +148,7 @@ var Fx = (function(){
 		
 		var style = element.style;
 		var is3d = property.indexOf('3d') > -1;
+		var isTranslate = property === 'translate' || property === 'translate3d';
 		var hasUnit = no_unit.indexOf(property) < 0;
 		var unit = hasUnit ? opts.unit : '';
 
@@ -174,10 +192,10 @@ var Fx = (function(){
 		var transition = typeof trans === 'function' ? trans : transitions.linear;
 
 
-		// fixes for IE9, which doesn't support 3D animations
+		// gracefully degrade for browsers that don't support 3D animations
 
 
-		if (is_IE9_and_below && is3d) {
+		if (is3d && !supports3d) {
 
 			property = property.replace('3d', '');
 
@@ -198,21 +216,25 @@ var Fx = (function(){
 				var value = [];
 				
 				if (x_exists) {
-					value.push((x||0) + unit);
+					value.push(x + unit);
 				} if (y_exists) {
-					value.push((y||0) + unit);
-				} if (z_exists) {
-					value.push((z||0) + unit);
+					value.push(y + unit);
+				} if (z_exists && supports3d) {
+					value.push(z + unit);
 				}
-				
+
 				style[vendorTransform] = property + '(' + value.join(',') + ')';
 
 			} : function (x, y) {
 
-				if (x_exists) {
-					style.left = Math.round(x) + unit;
-				} if (y_exists) {
-					style.top = Math.round(y) + unit;
+				if (isTranslate) {
+
+					if (x_exists) {
+						style.left = Math.round(x) + unit;
+					} if (y_exists) {
+						style.top = Math.round(y) + unit;
+					}
+
 				}
 			},
 			nocss: function(x) {
@@ -245,7 +267,7 @@ var Fx = (function(){
 			css: function() {
 
 				var value = parse(getStyle(element, property));
-				return isNaN(value) ? defaults.nopx : [value]; // because 0 is falsey
+				return isNaN(value) ? defaults.css : [value]; // because 0 is falsey
 
 			},
 			css3: function() {
@@ -276,11 +298,14 @@ var Fx = (function(){
 
 					}
 
-				} else if (property === 'translate' || property === 'translate3d') {
+				} else if (isTranslate) {
+
+					var left = getStyle(element, 'left');
+					var top = getStyle(element, 'top');
 
 					result = [
-						parse(style.left) || 0,
-						parse(style.top) || 0
+						parse(left) || 0,
+						parse(top) || 0
 					];
 
 				}
@@ -290,7 +315,7 @@ var Fx = (function(){
 			nocss: function() {
 
 				var value = element[property];
-				return isNaN(value) ? defaults.nostyle : [value];
+				return isNaN(value) ? defaults.nocss : [value];
 
 			}
 		};
@@ -373,7 +398,7 @@ var Fx = (function(){
 
 			// get current state
 			var state = get();
-
+			
 			x = state[0];
 			y = state[1];
 			z = state[2];
@@ -432,7 +457,11 @@ var Fx = (function(){
 
 
 	function getStyle (element, property) {
-		return element.style[property] || (isIE ? element.currentStyle : getComputedStyle(element))[property];
+		return element.style[property] || getCompStyle(element, property);
+	}
+
+	function getCompStyle (element, property) {
+		return (isIE ? element.currentStyle : getComputedStyle(element))[property];
 	}
 
 	function isDefined (something) {
