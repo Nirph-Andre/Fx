@@ -9,6 +9,10 @@ The tiniest high performance, fully cross browser, dependency free animation lib
 - **Cross browser**: Tested in Chrome, Safari, Firefox, Opera, iOS, Android, and IE6+
 - **Dependency-free**: No jQuery! No MooTools! No YUI! No Closure!
 
+##Demo
+
+[performancejs.com/Fx.js/demo](http://performancejs.com/Fx.js/demo/)
+
 ##Usage
 
 ```javascript
