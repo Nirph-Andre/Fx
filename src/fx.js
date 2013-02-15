@@ -76,6 +76,15 @@ var Fx = (function(){
 	})();
 
 
+	var property_map = {
+		css: 'bottom fontSize height left margin marginBottom marginLeft marginRight marginTop padding paddingBottom paddingLeft paddingRight opacity paddingTop right top width zoom',
+		css3: 'translate translate3d scale scale3d',
+		nocss: 'scrollLeft scrollTop'
+	};
+
+	var no_unit = 'opacity scale scale3d scrollLeft scrollTop zoom'.split(' ');
+
+
 	//
 	// Fx
 	//
@@ -83,16 +92,37 @@ var Fx = (function(){
 
 	var Fx = function (element, property, options) {
 
+		var self = this;
+
+		self.options = {
+			duration: 300,
+			animationStart: function(){},
+			animationEnd: function(){},
+			unit: 'px'
+		};
+
+
+		// sanity check
+
+
+		if (!element) {
+			throw new Error('Fx requires an element, passed ' + element);
+		}
+
+		if (!property) {
+			throw new Error('Fx requires a property, passed ' + property);
+		}
+
 
 		// vars
 
+		
+		property = toCamelCase(property);
 
-		var self = this;
 		var style = element.style;
-		var px = 'px',
-			translate = 'translate',
-			scale = 'scale',
-			threeD = '3d';
+		var is3d = property.search('3d') > -1;
+		var hasUnit = no_unit.indexOf(property) < 0;
+		var unit = hasUnit ? self.options.unit : '';
 
 		var x, y, z;
 		var animationFrame;
@@ -106,197 +136,160 @@ var Fx = (function(){
 		// fixes for IE9, which doesn't support 3D animations
 
 
-		if (is_IE9_and_below) {
+		if (is_IE9_and_below && is3d) {
 
-			if (property === translate + threeD) {
-
-				property = translate;
-
-			} else if (property === scale + threeD) {
-
-				property = scale;
-
-			}
+			property = property.replace('3d', '');
 
 		}
 
 
 		// set user options
-		
 
-		self.options = {
-			duration: 300,
-			animationStart: function(){},
-			animationEnd: function(){}
-		};
 
 		if (options) {
 			setOptions(self.options, options);
 		}
 
 
-		// define tween functions
-
-		var tweenNoCSS3 = function (x, y) {
-			style.left = Math.round(x) + px;
-			style.top = Math.round(y) + px;
-		};
+		// setters
+		
 
 		var setters = {
-			translate3d: vendorTransform ? function (x, y, z) {
-				var _x = x ? x + px : 0;
-				var _y = y ? y + px : 0;
-				var _z = z ? z + px : 0;
-				style[vendorTransform] = property + '(' + [_x, _y, _z].join(',') + ')';
-			} : tweenNoCSS3,
-			translate: vendorTransform ? function (x, y) {
-				var _x = x ? x + px : 0;
-				var _y = y ? y + px : 0;
-				style[vendorTransform] = property + '(' + [_x, _y].join(',') + ')';
-			} : tweenNoCSS3,
-			scale3d: vendorTransform ? function () {
-				style[vendorTransform] = property + '(' + toArray(arguments).join(',') + ')';
-			} : function(){},
-			bottom: function(x) {
-				style[property] = x + px;
+			css: function(x) {
+
+				style[property] = x + unit;
+
 			},
-			opacity: function(x) {
-				style[property] = x;
+			css3: vendorTransform ? function (x, y, z) {
+
+				var value = [];
+				
+				if (x_exists) {
+					value.push((x||0) + unit);
+				} if (y_exists) {
+					value.push((y||0) + unit);
+				} if (z_exists) {
+					value.push((z||0) + unit);
+				}
+				
+				style[vendorTransform] = property + '(' + value.join(',') + ')';
+
+			} : function (x, y) {
+
+				if (x_exists) {
+					style.left = Math.round(x) + unit;
+				} if (y_exists) {
+					style.top = Math.round(y) + unit;
+				}
 			},
-			scrollLeft: function(x) {
+			nocss: function(x) {
+
 				element[property] = x;
+
 			}
 		};
 
-		setters.scale = setters.scale3d;
-		setters['font-size'] = setters.height = setters.width = setters.left = setters.right = setters.top = setters.margin = setters['margin-bottom'] = setters['margin-left'] = setters['margin-right'] = setters['margin-top'] = setters.padding = setters['padding-bottom'] = setters['padding-left'] = setters['padding-right'] = setters['padding-top'] = setters.bottom;
-		setters.zoom = setters.opacity;
-		setters.scrollTop = setters.scrollLeft;
 
-		var set = setters[property];
+		// getters
+
 
 		var defaults = {
-			opacity: [1],
-			zoom: [1],
-			scale: [1,1],
-			scale3d: [1,1,1],
-			translate: [0,0],
-			translate3d: [0,0,0]
+			css: unit ? [0] : [1],
+			css3: is3d ? (unit ? [0,0,0] : [1,1,1]) : (unit ? [0,0] : [1,1]),
+			nocss: [0]
 		};
 
-		// get initial property values
+		var sliceStarts = {
+			scale: 6,
+			scale3d: 8,
+			translate: 10,
+			translate3d: 12
+		};
 
-		var get = function() {
+		var getters = {
+			css: function() {
 
-			var result = [0,0,0];
-			var sliceStart;
+				var value = parse(getStyle(element, property));
+				return isNaN(value) ? defaults.nopx : [value]; // because 0 is falsey
 
-			switch (property) {
+			},
+			css3: function() {
 
-				case scale:
+				var result = defaults.css3;
+				var sliceStart = sliceStarts[property];
 
-					sliceStart = 6;
+				if (vendorTransform) {
 
-				case scale+threeD:
+					var currentStyle = getStyle(element, vendorTransform);
+					var matches = currentStyle.slice(sliceStart, -1).split(',');
 
-					if (!sliceStart) {
-						sliceStart = 8;
-					}
+					if (currentStyle) {
 
-				case translate:
+						if (matches[0]) {
 
-					if (!sliceStart) {
-						sliceStart = 10;
-					}
+							result[0] = parse(matches[0]);
 
-				case translate+threeD:
+						} if (matches[1]) {
 
-					if (vendorTransform) {
+							result[1] = parse(matches[1]);
 
-						if (!sliceStart) {
-							sliceStart = 12;
-						}
+						} if (matches[2]) {
 
-						var currentStyle = style[vendorTransform];
-						var matches = currentStyle.slice(sliceStart, -1).split(',');
-
-						if (currentStyle) {
-
-							if (matches[0]) {
-
-								result[0] = parse(matches[0]);
-
-							} if (matches[1]) {
-
-								result[1] = parse(matches[1]);
-
-							} if (matches[2]) {
-
-								result[2] = parse(matches[2]);
-
-							}
-
-						} else {
-
-							result = defaults[property];
+							result[2] = parse(matches[2]);
 
 						}
 
-
-
-					} else if (property === translate || property === translate+threeD) {
-
-						result = [
-							parse(style.left) || 0,
-							parse(style.top) || 0
-						];
-
 					}
 
-					break;
+				} else if (property === 'translate' || property === 'translate3d') {
 
-				case 'bottom':
-				case 'font-size':
-				case 'height':
-				case 'left':
-				case 'margin':
-				case 'margin-bottom':
-				case 'margin-left':
-				case 'margin-right':
-				case 'margin-top':
-				case 'padding':
-				case 'padding-bottom':
-				case 'padding-left':
-				case 'padding-right':
-				case 'padding-top':
-				case 'right':
-				case 'top':
-				case 'width':
+					result = [
+						parse(style.left) || 0,
+						parse(style.top) || 0
+					];
 
-					result[0] = parse(style[property]) || 0;
+				}
 
-					break;
+				return result;
+			},
+			nocss: function() {
 
-				case 'opacity':
-				case 'zoom':
-
-					var value = parse(style[property]);
-					result = isNaN(value) ? defaults[property] : [value]; // because 0 is falsey
-
-					break;
-
-				case 'scrollLeft':
-				case 'scrollTop':
-
-					result[0] = element[property] || 0;
+				var value = element[property];
+				return isNaN(value) ? defaults.nostyle : [value];
 
 			}
-
-			return result;
-
 		};
 
+
+		// define getter + setter
+
+
+		for (var type in property_map) {
+
+			var properties = property_map[type].split(' ');
+
+			for (var n = properties.length; n--;) {
+				setters[properties[n]] = setters[type];
+			}
+
+		}
+
+		for (var gtype in property_map) {
+
+			var gproperties = property_map[gtype].split(' ');
+
+			for (var m = gproperties.length; m--;) {
+				getters[gproperties[m]] = getters[gtype];
+			}
+
+		}
+
+		var set = setters[property];
+		var get = getters[property];
+
+
 		// animate!
+
 
 		var compute = function (time){
 
@@ -386,6 +379,8 @@ var Fx = (function(){
 		// public API
 
 
+		self.getters = getters;
+		self.setters = setters;
 		self.element = element;
 		self.property = property;
 		self.get = get;
@@ -401,6 +396,11 @@ var Fx = (function(){
 	// helpers
 	//
 	
+
+
+	function getStyle (element, property) {
+		return element.style[property] || (isIE ? element.currentStyle : getComputedStyle(element))[property];
+	}
 
 	function isDefined (something) {
 		return typeof something !== 'undefined';
@@ -427,6 +427,22 @@ var Fx = (function(){
 
 	function toArray (collection) {
 		return [].slice.call(collection);
+	}
+
+	function toCamelCase (property) {
+		var parts = property.split('-');
+		var count = parts.length;
+
+		if (count > 1) {
+
+			while (count-- > 1) {
+				var part = parts[count];
+				parts[count] = part.charAt(0).toUpperCase() + part.slice(1);
+			}
+
+		}
+
+		return parts.join('');
 	}
 
 

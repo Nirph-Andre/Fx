@@ -157,7 +157,7 @@ addEvent(toggler_scrollTop, 'click', function (e) {
 
 var element_color = $('#element-color');
 var toggler_color = $('#toggler-color');
-var fx_color = new Fx(element_color);
+//var fx_color = new Fx(element_color);
 var color_call_count = 0;
 
 addEvent(toggler_color, 'click', function (e) {
