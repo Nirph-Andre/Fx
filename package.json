@@ -10,6 +10,7 @@
 		"email": "boris@agilediagnosis.com",
 		"url": "https://github.com/AgileDiagnosis/Fx/issues"
 	},
+	"keywords": ["animation", "animate", "CSS", "CSS3", "requestAnimationFrame", "animationFrame", "translate", "transform", "3D", "hardware"],
 	"license": "MIT",
 	"readmeFilename": "README.md",
 	"repository": {
