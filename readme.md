@@ -1,6 +1,6 @@
 #Fx.js
 
-A super lightweight, high performance, cross-browser, dependency-free animation library for the modern web. Ideal for mobile applications where you need a lot of animation functionality without a lot of footprint.
+The tiniest high performance, fully cross browser, dependency free animation library for the modern web. Ideal for mobile applications where you need a lot of animation functionality without a lot of footprint.
 
 ##Features:
 

@@ -5,7 +5,7 @@
 	"contributors": [
 		"Boris Cherny <boris@agilediagnosis.com>"
 	],
-	"description": "A tiny, high performance, fully cross browser, dependency free animation library for the modern web.",
+	"description": "The tiniest high performance, fully cross browser, dependency free animation library for the modern web.",
 	"bugs": {
 		"email": "boris@agilediagnosis.com",
 		"url": "https://github.com/AgileDiagnosis/Fx/issues"
