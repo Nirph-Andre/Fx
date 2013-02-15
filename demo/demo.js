@@ -1,3 +1,15 @@
+// document.getElementsByClassName polyfill for ie8 and down
+if (!document.getElementsByClassName) {
+	document.getElementsByClassName = function(e,t){
+		for (var n = [], r = e.getElementsByTagName('*'), i = r.length; i--;) {
+			r[i].className.indexOf(t) > -1 && n.push(r[i]);
+			return n;
+		}
+	};
+}
+
+
+var evt = 'ontouchstart' in window ? 'touchstart' : 'click';
 
 // fx: translate
 
@@ -6,7 +18,7 @@ var toggler_translate = $('#toggler-translate');
 var fx_translate = new Fx(element_translate, 'translate3d');
 var translate_call_count = 0;
 
-addEvent(toggler_translate, 'click', function (e) {
+addEvent(toggler_translate, evt, function (e) {
 
 	// alternate the direction with every click
 
@@ -33,7 +45,7 @@ var toggler_left = $('#toggler-left');
 var fx_left = new Fx(element_left, 'left');
 var left_call_count = 0;
 
-addEvent(toggler_left, 'click', function (e) {
+addEvent(toggler_left, evt, function (e) {
 
 	// alternate the direction with every click
 
@@ -62,7 +74,7 @@ var fx_rotate = new Fx(element_rotate, 'rotate', {
 });
 var rotate_call_count = 0;
 
-addEvent(toggler_rotate, 'click', function (e) {
+addEvent(toggler_rotate, evt, function (e) {
 
 	var to;
 	
@@ -87,7 +99,7 @@ var toggler_scale = $('#toggler-scale');
 var fx_scale = new Fx(element_scale, 'scale3d');
 var scale_call_count = 0;
 
-addEvent(toggler_scale, 'click', function (e) {
+addEvent(toggler_scale, evt, function (e) {
 
 	var to;
 	
@@ -112,7 +124,7 @@ var toggler_opacity = $('#toggler-opacity');
 var fx_opacity = new Fx(element_opacity, 'opacity');
 var opacity_call_count = 0;
 
-addEvent(toggler_opacity, 'click', function (e) {
+addEvent(toggler_opacity, evt, function (e) {
 
 	var to;
 	
@@ -137,7 +149,7 @@ var toggler_font_size = $('#toggler-font-size');
 var fx_font_size = new Fx(element_font_size, 'font-size');
 var font_size_call_count = 0;
 
-addEvent(toggler_font_size, 'click', function (e) {
+addEvent(toggler_font_size, evt, function (e) {
 
 	var to;
 	
@@ -162,7 +174,7 @@ var toggler_scrollTop = $('#toggler-scrollTop');
 var fx_scrollTop = new Fx.Scroll(element_scrollTop);
 var scrollTop_call_count = 0;
 
-addEvent(toggler_scrollTop, 'click', function (e) {
+addEvent(toggler_scrollTop, evt, function (e) {
 
 	var to;
 	

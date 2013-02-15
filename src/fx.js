@@ -74,15 +74,14 @@ var Fx = (function(){
 
 		}
 	})();
-
-
+	
 	var property_map = {
 		css: 'bottom fontSize height left margin marginBottom marginLeft marginRight marginTop padding paddingBottom paddingLeft paddingRight opacity paddingTop right top width zoom',
 		css3: 'translate translate3d scale scale3d rotate rotate3d',
 		nocss: 'scrollLeft scrollTop'
 	};
 
-	var no_unit = 'opacity scale scale3d scrollLeft scrollTop zoom'.split(' ');
+	var no_unit = 'opacity scale scale3d scrollLeft scrollTop zoom';
 
 
 	//
@@ -131,7 +130,7 @@ var Fx = (function(){
 
 		
 		var style = element.style;
-		var is3d = property.search('3d') > -1;
+		var is3d = property.indexOf('3d') > -1;
 		var hasUnit = no_unit.indexOf(property) < 0;
 		var unit = hasUnit ? opts.unit : '';
 
