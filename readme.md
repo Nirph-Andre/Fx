@@ -44,16 +44,12 @@ var fx = new Fx(element, 'top', {
 - `duration` {Number} The animation duration (in milliseconds)
 - `animationStart` {Function} Animation start hook
 - `animationEnd` {Function} Animation end hook
-- `transition` {Function} Custom relative transition function
+- `transition` {Function} Custom relative transition function (takes time since start)
 - `unit` {String} Units (`px`, `%`, `em`, `deg`, etc...)
 
 ##Supported properties
 
- `bottom` `height` `left` `margin` `margin-bottom` `margin-left` `margin-right` `margin-top` `opacity` `padding` `padding-bottom` `padding-left` `padding-right` `padding-top` `right` `scale` `scale3d` `top` `translate` `translate3d` `width` `zoom`
-
-###Fx.Color
-
-`background-color` `border-bottom-color` `border-color` `border-left-color` `border-right-color` `border-top-color` `color`
+ `bottom` `height` `left` `margin` `margin-bottom` `margin-left` `margin-right` `margin-top` `opacity` `padding` `padding-bottom` `padding-left` `padding-right` `padding-top` `right` `rotate` `scale` `scale3d` `top` `translate` `translate3d` `width` `zoom`
 
 ###Fx.Scroll
 

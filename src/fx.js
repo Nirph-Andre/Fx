@@ -78,7 +78,7 @@ var Fx = (function(){
 
 	var property_map = {
 		css: 'bottom fontSize height left margin marginBottom marginLeft marginRight marginTop padding paddingBottom paddingLeft paddingRight opacity paddingTop right top width zoom',
-		css3: 'translate translate3d scale scale3d',
+		css3: 'translate translate3d scale scale3d rotate rotate3d',
 		nocss: 'scrollLeft scrollTop'
 	};
 
@@ -115,12 +115,21 @@ var Fx = (function(){
 		}
 
 
+		// set user options
+
+		var opts = self.options;
+
+		if (options) {
+			setOptions(opts, options);
+		}
+
+
 		// vars
 
 		
 		property = toCamelCase(property);
 
-		var opts = self.options;
+		
 		var style = element.style;
 		var is3d = property.search('3d') > -1;
 		var hasUnit = no_unit.indexOf(property) < 0;
@@ -176,14 +185,6 @@ var Fx = (function(){
 		}
 
 
-		// set user options
-
-
-		if (options) {
-			setOptions(opts, options);
-		}
-
-
 		// setters
 		
 
@@ -234,7 +235,9 @@ var Fx = (function(){
 
 		var sliceStarts = {
 			scale: 6,
+			rotate: 7,
 			scale3d: 8,
+			rotate3d: 9,
 			translate: 10,
 			translate3d: 12
 		};
@@ -412,8 +415,6 @@ var Fx = (function(){
 		// public API
 
 
-		self.getters = getters;
-		self.setters = setters;
 		self.element = element;
 		self.property = property;
 		self.get = get;
@@ -456,10 +457,6 @@ var Fx = (function(){
 			}
 		}
 
-	}
-
-	function toArray (collection) {
-		return [].slice.call(collection);
 	}
 
 	function toCamelCase (property) {

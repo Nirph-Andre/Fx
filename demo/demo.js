@@ -53,6 +53,33 @@ addEvent(toggler_left, 'click', function (e) {
 
 });
 
+// fx: rotate
+
+var element_rotate = $('#element-rotate');
+var toggler_rotate = $('#toggler-rotate');
+var fx_rotate = new Fx(element_rotate, 'rotate', {
+	unit: 'deg'
+});
+var rotate_call_count = 0;
+
+addEvent(toggler_rotate, 'click', function (e) {
+
+	var to;
+	
+	if (++rotate_call_count % 2) {
+
+		to = 45;
+
+	} else {
+
+		to = 0;
+
+	}
+	
+	fx_rotate.to(to);
+
+});
+
 // fx: scale
 
 var element_scale = $('#element-scale');
