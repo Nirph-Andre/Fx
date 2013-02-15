@@ -1,14 +1,13 @@
 #Fx.js
 
-A super lightweight, high performance, cross-browser, dependency-free animation library for the modern web.
+A super lightweight, high performance, cross-browser, dependency-free animation library for the modern web. Ideal for mobile applications where you need a lot of animation functionality without a lot of footprint.
 
 ##Features:
 
-- **Super lightweight**: Just 3kb minified
-- **High performance**: Uses requestAnimationFrame and hardware-accelerated CSS transforms, degrades gracefully in older browsers
+- **Super lightweight**: Just 1.9k minified + gzipped, or 3.6k minified
+- **High performance**: Uses requestAnimationFrame and hardware-accelerated CSS transforms, degrades gracefully in older browsers (3D degrades to 2D, X/Y transforms degrade to left/top)
 - **Cross browser**: Tested in Chrome, Safari, Firefox, Opera, iOS, Android, and IE6+
-- **Dependency-free**: No jQuery, no MooTools, no YUI, no Closure
-- **Supports module loaders**: CommonJS and AMD
+- **Dependency-free**: No jQuery! No MooTools! No YUI! No Closure!
 
 ##Usage
 
@@ -45,11 +44,11 @@ var fx = new Fx(element, 'top', {
 - `animationStart` {Function} Animation start hook
 - `animationEnd` {Function} Animation end hook
 - `transition` {Function} Custom relative transition function (takes time since start)
-- `unit` {String} Units (`px`, `%`, `em`, `deg`, etc...)
+- `unit` {String} Units (`px`, `%`, `em`, `deg`, etc.)
 
 ##Supported properties
 
- `bottom` `height` `left` `margin` `margin-bottom` `margin-left` `margin-right` `margin-top` `opacity` `padding` `padding-bottom` `padding-left` `padding-right` `padding-top` `right` `rotate` `scale` `scale3d` `top` `translate` `translate3d` `width` `zoom`
+ `bottom` `height` `left` `margin` `margin-bottom` `margin-left` `margin-right` `margin-top` `opacity` `padding` `padding-bottom` `padding-left` `padding-right` `padding-top` `right` `rotate` `rotate3d` `scale` `scale3d` `top` `translate` `translate3d` `width` `zoom`
 
 ###Fx.Scroll
 
@@ -58,5 +57,5 @@ var fx = new Fx(element, 'top', {
 ##To do:
 
 - Unit tests
-- Support for transitioning multiple properties
-- Support for CSS class transitions
+- Support for transitioning multiple properties simultaneously
+- Support for transitioning CSS classes

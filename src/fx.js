@@ -13,6 +13,23 @@ var Fx = (function(){
 	var win_perf = win.performance;
 	var hasPerformance = !!(win_perf && win_perf.now);
 	var AF = 'AnimationFrame', cAF = 'cancel'+AF, CAF = 'Cancel'+AF, rAF = 'request'+AF, RAF = 'Request'+AF;
+	
+	// for optimal minification
+	var margin = 'margin';
+	var padding = 'padding';
+	var scale = 'scale';
+	var threeDee = '3d';
+	var translate = 'translate';
+	var translate3d = 'translate' + threeDee;
+	var scrollLeftTop = 'scrollLeft scrollTop';
+	var fontsizeHeightOpacityWidthZoom = ' fontSize height opacity width zoom';
+	var rotate = 'rotate';
+	var _ = ' ';
+	var Bottom = 'Bottom';
+	var Left = 'Left';
+	var Right = 'Right';
+	var Top = 'Top';
+	var ransform = 'ransform';
 
 
 	//
@@ -56,8 +73,9 @@ var Fx = (function(){
 	// CSS3 transform polyfill
 	var vendorTransform = (function() {
 		var style = doc.createElement('p').style;
-		var Transform = 'Transform';
-		if (style.transform) return 'transform';
+		var Transform = 'T'+ransform;
+		var t = 't'+ransform;
+		if (style[t]) return t;
 		for (var v = vendor_count; v--;) {
 
 			var vendor = vendors[v];
@@ -83,24 +101,23 @@ var Fx = (function(){
 
 		var body = doc.body;
 		var el = doc.createElement('p');
-
-		el.style[vendorTransform] = 'translate3d(1px,1px,1px)';
+		el.style[vendorTransform] = translate3d + '(1px,1px,1px)';
 		body.appendChild(el);
 		var has3d = getCompStyle(el, vendorTransform);
 		body.removeChild(el);
 
-		return typeof has3d !== 'undefined' && has3d.length > 0 && has3d !== 'none' && !(isIE && IE_version < 9);
+		return isDefined(has3d) && has3d.length > 0 && has3d !== 'none' && !(isIE && IE_version < 9);
 	})();
 	
+	// property collections
 	var property_map = {
-		css: 'bottom fontSize height left margin marginBottom marginLeft marginRight marginTop padding paddingBottom paddingLeft paddingRight opacity paddingTop right top width zoom',
-		css3: 'translate translate3d scale scale3d rotate rotate3d',
-		nocss: 'scrollLeft scrollTop'
+		css: 'bottom left right top ' + margin + _ + margin+Bottom + _ + margin+Left + _ + margin+Right + _ + margin+Top + _ + padding + _ + padding+Bottom + _ + padding+Left + _ + padding+Right + _ + padding+Top + fontsizeHeightOpacityWidthZoom,
+		css3: translate + _ + translate3d + _ + rotate + _ + rotate+threeDee + _ + scale + _ + scale+threeDee,
+		nocss: scrollLeftTop
 	};
 
-	var no_negative = 'fontSize height scrollLeft scrollTop opacity width zoom';
-
-	var no_unit = 'opacity scale scale3d scrollLeft scrollTop zoom';
+	var no_negative = scrollLeftTop + fontsizeHeightOpacityWidthZoom;
+	var no_unit = scrollLeftTop + ' opacity zoom ' + scale + ' ' + scale + threeDee;
 
 
 	//
@@ -121,18 +138,6 @@ var Fx = (function(){
 		};
 
 
-		// sanity check
-
-
-		if (!element) {
-			throw new Error('Fx requires an element, passed ' + element);
-		}
-
-		if (!property) {
-			throw new Error('Fx requires a property, passed ' + property);
-		}
-
-
 		// set user options
 
 		var opts = self.options;
@@ -147,11 +152,11 @@ var Fx = (function(){
 		
 		property = toCamelCase(property);
 
-		
+		var round = Math.round;
 		var style = element.style;
 		var cantBeNegative = no_negative.indexOf(property) > 0;
-		var is3d = property.indexOf('3d') > -1;
-		var isTranslate = property === 'translate' || property === 'translate3d';
+		var is3d = property.indexOf(threeDee) > -1;
+		var isTranslate = property === translate || property === translate3d;
 		var hasUnit = no_unit.indexOf(property) < 0;
 		var unit = hasUnit ? opts.unit : '';
 
@@ -200,7 +205,7 @@ var Fx = (function(){
 
 		if (is3d && !supports3d) {
 
-			property = property.replace('3d', '');
+			property = property.replace(threeDee, '');
 
 		}
 
@@ -210,7 +215,7 @@ var Fx = (function(){
 
 		var setters = {
 			css: function(x) {
-				
+
 				style[property] = x + unit;
 
 			},
@@ -233,9 +238,9 @@ var Fx = (function(){
 				if (isTranslate) {
 
 					if (x_exists) {
-						style.left = Math.round(x) + unit;
+						style.left = round(x) + unit;
 					} if (y_exists) {
-						style.top = Math.round(y) + unit;
+						style.top = round(y) + unit;
 					}
 
 				}
@@ -349,7 +354,7 @@ var Fx = (function(){
 
 		var set = setters[property];
 		var get = getters[property];
-
+		
 
 		// animate!
 		
@@ -403,13 +408,13 @@ var Fx = (function(){
 
 		var to = function (new_x, new_y, new_z) {
 
-			var duration = self.options.duration;
+			var duration = opts.duration;
 
 			x_exists = isNumber(new_x);
 			y_exists = isNumber(new_y);
 			z_exists = isNumber(new_z);
 
-			self.options.animationStart();
+			opts.animationStart();
 
 			// get current state
 			var state = get();

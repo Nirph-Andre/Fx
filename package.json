@@ -1,11 +1,11 @@
 {
 	"name": "fxjs",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"author": "Agile Diagnosis <hello@agilediagnosis.com>",
 	"contributors": [
 		"Boris Cherny <boris@agilediagnosis.com>"
 	],
-	"description": "A super lightweight, high performance, cross-browser, dependency-free animation library for the modern web.",
+	"description": "A tiny, high performance, fully cross browser, dependency free animation library for the modern web.",
 	"bugs": {
 		"email": "boris@agilediagnosis.com",
 		"url": "https://github.com/AgileDiagnosis/Fx/issues"
