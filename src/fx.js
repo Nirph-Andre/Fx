@@ -98,6 +98,8 @@ var Fx = (function(){
 		nocss: 'scrollLeft scrollTop'
 	};
 
+	var no_negative = 'fontSize height scrollLeft scrollTop opacity width zoom';
+
 	var no_unit = 'opacity scale scale3d scrollLeft scrollTop zoom';
 
 
@@ -147,6 +149,7 @@ var Fx = (function(){
 
 		
 		var style = element.style;
+		var cantBeNegative = no_negative.indexOf(property) > 0;
 		var is3d = property.indexOf('3d') > -1;
 		var isTranslate = property === 'translate' || property === 'translate3d';
 		var hasUnit = no_unit.indexOf(property) < 0;
@@ -207,7 +210,7 @@ var Fx = (function(){
 
 		var setters = {
 			css: function(x) {
-
+				
 				style[property] = x + unit;
 
 			},
@@ -369,6 +372,18 @@ var Fx = (function(){
 
 			}
 
+			if (cantBeNegative) {
+
+				if (x_exists && x < 0) {
+					x = 0;
+				} if (y_exists && y < 0) {
+					y = 0;
+				} if (z_exists && z < 0) {
+					z = 0;
+				}
+
+			}
+
 			set(x, y, z);
 		};
 
@@ -398,7 +413,7 @@ var Fx = (function(){
 
 			// get current state
 			var state = get();
-			
+
 			x = state[0];
 			y = state[1];
 			z = state[2];
