@@ -106,7 +106,11 @@ var Fx = (function(){
 
 	// check for 3d animation support
 	// based on stackoverflow.com/questions/5661671/detecting-transform-translate3d-support/12621264#12621264
-	var supports3d = (function(){
+	var supports3d = (function () {
+
+		if (isIE && IE_version < 9) {
+			return 0;
+		}
 
 		var body = doc.body;
 		var el = doc.createElement('p');
@@ -115,19 +119,25 @@ var Fx = (function(){
 		var has3d = getCompStyle(el, vendorTransform);
 		body.removeChild(el);
 
-		return isDefined(has3d) && has3d.length > 0 && has3d !== 'none' && !(isIE && IE_version < 9);
+		return isDefined (has3d) && has3d.length > 0 && has3d !== 'none';
+
 	})();
 	
 	// property collections
-	var property_map = {
-		css: 'bottom left right top ' + margin + _ + margin+Bottom + _ + margin+Left + _ + margin+Right + _ + margin+Top + _ + padding + _ + padding+Bottom + _ + padding+Left + _ + padding+Right + _ + padding+Top + fontsizeHeightOpacityWidthZoom,
-		css3: translate + _ + translate3d + _ + rotate + _ + rotate+threeDee + _ + scale + _ + scale+threeDee,
-		nocss: scrollLeftTop
+	var rules = {
+
+		/**
+		 * Properties grouped according to the structures of their values
+		 * @type {Object}
+		 */
+		schemas: {
+			css: 'bottom left right top ' + margin + _ + margin+Bottom + _ + margin+Left + _ + margin+Right + _ + margin+Top + _ + padding + _ + padding+Bottom + _ + padding+Left + _ + padding+Right + _ + padding+Top + fontsizeHeightOpacityWidthZoom,
+			css3: translate + _ + translate3d + _ + rotate + _ + rotate+threeDee + _ + scale + _ + scale+threeDee,
+			nocss: scrollLeftTop
+		},
+		no_negative: scrollLeftTop + fontsizeHeightOpacityWidthZoom,
+		no_unit: scrollLeftTop + ' opacity zoom ' + scale + ' ' + scale + threeDee
 	};
-
-	var no_negative = scrollLeftTop + fontsizeHeightOpacityWidthZoom;
-	var no_unit = scrollLeftTop + ' opacity zoom ' + scale + ' ' + scale + threeDee;
-
 
 	//
 	// Fx
@@ -163,10 +173,10 @@ var Fx = (function(){
 
 		var round = Math.round;
 		var style = element.style;
-		var cantBeNegative = no_negative.indexOf(property) > 0;
+		var cantBeNegative = rules.no_negative.indexOf(property) > 0;
 		var is3d = property.indexOf(threeDee) > -1;
 		var isTranslate = property === translate || property === translate3d;
-		var hasUnit = no_unit.indexOf(property) < 0;
+		var hasUnit = rules.no_unit.indexOf(property) < 0;
 		var unit = hasUnit ? opts.unit : '';
 
 		var x, y, z;
@@ -271,15 +281,6 @@ var Fx = (function(){
 			nocss: [0]
 		};
 
-		var sliceStarts = {
-			scale: 6,
-			rotate: 7,
-			scale3d: 8,
-			rotate3d: 9,
-			translate: 10,
-			translate3d: 12
-		};
-
 		var getters = {
 			css: function() {
 
@@ -290,7 +291,14 @@ var Fx = (function(){
 			css3: function() {
 
 				var result = defaults.css3;
-				var sliceStart = sliceStarts[property];
+				var sliceStart = {
+					scale: 6,
+					rotate: 7,
+					scale3d: 8,
+					rotate3d: 9,
+					translate: 10,
+					translate3d: 12
+				}[property];
 
 				if (vendorTransform) {
 
@@ -341,22 +349,16 @@ var Fx = (function(){
 		// define getter + setter
 
 
-		for (var type in property_map) {
+		var schemas = rules.schemas;
 
-			var properties = property_map[type].split(' ');
+		for (var type in schemas) {
+
+			var properties = schemas[type].split(' ');
 
 			for (var n = properties.length; n--;) {
-				setters[properties[n]] = setters[type];
-			}
-
-		}
-
-		for (var gtype in property_map) {
-
-			var gproperties = property_map[gtype].split(' ');
-
-			for (var m = gproperties.length; m--;) {
-				getters[gproperties[m]] = getters[gtype];
+				var prop = properties[n];
+				getters[prop] = getters[type];
+				setters[prop] = setters[type];
 			}
 
 		}
