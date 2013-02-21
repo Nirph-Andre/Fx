@@ -11,6 +11,11 @@ h1 {
 	color: #E71;
 }
 
+span {
+	color: #666;
+	padding-left: 5px;
+}
+
 .container {
 	background: #eee;
 	height: 100px;

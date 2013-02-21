@@ -178,6 +178,7 @@ var Fx = (function(){
 		var isTranslate = property === translate || property === translate3d;
 		var hasUnit = rules.no_unit.indexOf(property) < 0;
 		var unit = hasUnit ? opts.unit : '';
+		var calls = 0; // for measuring FPS
 
 		var x, y, z;
 		var animationFrame;
@@ -336,6 +337,7 @@ var Fx = (function(){
 				}
 
 				return result;
+
 			},
 			nocss: function() {
 
@@ -402,19 +404,20 @@ var Fx = (function(){
 
 			set(x, y, z);
 		};
-
+		
 		var tick = function (time) {
 
 			compute(time - time_start);
-
+			++calls;
 			if (time < time_end) {
 				win[rAF](tick);
 			}
 			else {
 				win[cAF](animationFrame);
 				set(x_to, y_to, z_to);
-				self.options.animationEnd();
+				self.options.animationEnd(element, 1000*calls/opts.duration);
 			}
+			
 		};
 
 		var to = function (new_x, new_y, new_z) {
@@ -425,7 +428,7 @@ var Fx = (function(){
 			y_exists = isNumber(new_y);
 			z_exists = isNumber(new_z);
 
-			opts.animationStart();
+			opts.animationStart(element);
 
 			// get current state
 			var state = get();
@@ -454,6 +457,9 @@ var Fx = (function(){
 				mz = (z_to - z_from)/duration;
 
 			}
+
+			// reset call count
+			calls = 0;
 
 			// firefox supports window.performance, but for some reason
 			// passes low-resolution timestamps to requestAnimationFrame callbacks;

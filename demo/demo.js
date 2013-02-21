@@ -8,14 +8,25 @@ if (!document.getElementsByClassName) {
 	};
 }
 
-
+// cross-browser click event
 var evt = 'ontouchstart' in window ? 'touchstart' : 'click';
+
+// animation options
+var options = {
+	duration: 1000,
+	animationStart: function (element) {
+		$('#fps-'+element.id.split('-').slice(1).join('-')).innerHTML = '';
+	},
+	animationEnd: function (element, FPS) {
+		$('#fps-'+element.id.split('-').slice(1).join('-')).innerHTML = 'Completed @' + FPS + 'FPS';
+	}
+};
 
 // fx: translate
 
 var element_translate = $('#element-translate');
 var toggler_translate = $('#toggler-translate');
-var fx_translate = new Fx(element_translate, 'translate3d');
+var fx_translate = new Fx(element_translate, 'translate3d', options);
 var translate_call_count = 0;
 
 addEvent(toggler_translate, evt, function (e) {
@@ -42,7 +53,7 @@ addEvent(toggler_translate, evt, function (e) {
 
 var element_left = $('#element-left');
 var toggler_left = $('#toggler-left');
-var fx_left = new Fx(element_left, 'left');
+var fx_left = new Fx(element_left, 'left', options);
 var left_call_count = 0;
 
 addEvent(toggler_left, evt, function (e) {
@@ -96,7 +107,7 @@ addEvent(toggler_rotate, evt, function (e) {
 
 var element_scale = $('#element-scale');
 var toggler_scale = $('#toggler-scale');
-var fx_scale = new Fx(element_scale, 'scale3d');
+var fx_scale = new Fx(element_scale, 'scale3d', options);
 var scale_call_count = 0;
 
 addEvent(toggler_scale, evt, function (e) {
@@ -121,7 +132,7 @@ addEvent(toggler_scale, evt, function (e) {
 
 var element_opacity = $('#element-opacity');
 var toggler_opacity = $('#toggler-opacity');
-var fx_opacity = new Fx(element_opacity, 'opacity');
+var fx_opacity = new Fx(element_opacity, 'opacity', options);
 var opacity_call_count = 0;
 
 addEvent(toggler_opacity, evt, function (e) {
@@ -146,7 +157,7 @@ addEvent(toggler_opacity, evt, function (e) {
 
 var element_font_size = $('#element-font-size');
 var toggler_font_size = $('#toggler-font-size');
-var fx_font_size = new Fx(element_font_size, 'font-size');
+var fx_font_size = new Fx(element_font_size, 'font-size', options);
 var font_size_call_count = 0;
 
 addEvent(toggler_font_size, evt, function (e) {

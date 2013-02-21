@@ -5,7 +5,7 @@ The tiny animation library - high performance, works with everthing from iOS to 
 ##Features:
 
 - **Super lightweight**: Just 1.9k minified + gzipped, or 3.6k minified
-- **High performance**: Uses requestAnimationFrame and hardware-accelerated CSS transforms, degrades gracefully in older browsers (requestAnimationFrame degrades to timeouts, 3D degrades to 2D, X/Y transforms degrade to left/top)
+- **High performance**: Uses requestAnimationFrame and hardware-accelerated CSS transforms, degrades gracefully in older browsers (requestAnimationFrame degrades to timeouts, 3D degrades to 2D, X/Y transforms degrade to left/top). Consistently delivers 60FPS and above in modern browsers
 - **Cross browser**: Tested in Chrome, Safari, Firefox, Opera, iOS, Android, and IE6+
 - **Dependency-free**: No jQuery! No MooTools! No YUI! No Closure!
 
@@ -45,8 +45,8 @@ var fx = new Fx(element, 'top', {
 ##Options
 
 - `duration` {Number} The animation duration (in milliseconds)
-- `animationStart` {Function} Animation start hook
-- `animationEnd` {Function} Animation end hook
+- `animationStart` {Function} Animation start hook (arguments: element)
+- `animationEnd` {Function} Animation end hook (arguments: element, framerate)
 - `transition` {Function} Custom relative transition function (takes time since start)
 - `unit` {String} Units (`px`, `%`, `em`, `deg`, etc.)
 
